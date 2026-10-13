@@ -1,0 +1,153 @@
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+} from "react-router-dom";
+
+import { AuthProvider } from "./context/AuthContext";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Places from "./pages/Places";
+import PlaceDetails from "./pages/PlaceDetails";
+import Favorites from "./pages/Favorites";
+import Reviews from "./pages/Reviews";
+import ExplorationRequests from "./pages/ExplorationRequests";
+import AdminPlaces from "./pages/AdminPlaces";
+import AdminCategories from "./pages/AdminCategories";
+import AdminRegions from "./pages/AdminRegions";
+import Profile from "./pages/Profile";
+
+function App() {
+
+    return (
+        <AuthProvider>
+
+            <BrowserRouter>
+
+                <Routes>
+
+                    <Route
+                        path="/"
+                        element={
+                            <Navigate
+                                to="/places"
+                                replace
+                            />
+                        }
+                    />
+
+                    <Route
+                        path="/login"
+                        element={<Login />}
+                    />
+
+                    <Route
+                        path="/register"
+                        element={<Register />}
+                    />
+
+                    <Route
+                        path="/places"
+                        element={
+                            <ProtectedRoute>
+                                <Places />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/places/:id"
+                        element={
+                            <ProtectedRoute>
+                                <PlaceDetails />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/favorites"
+                        element={
+                            <ProtectedRoute>
+                                <Favorites />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/reviews"
+                        element={
+                            <ProtectedRoute>
+                                <Reviews />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/requests"
+                        element={
+                            <ProtectedRoute>
+                                <ExplorationRequests />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/profile"
+                        element={
+                            <ProtectedRoute>
+                                <Profile />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin/places"
+                        element={
+                            <AdminRoute>
+                                <AdminPlaces />
+                            </AdminRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin/categories"
+                        element={
+                            <AdminRoute>
+                                <AdminCategories />
+                            </AdminRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin/regions"
+                        element={
+                            <AdminRoute>
+                                <AdminRegions />
+                            </AdminRoute>
+                        }
+                    />
+
+                </Routes>
+
+            </BrowserRouter>
+
+        </AuthProvider>
+    );
+}
+
+export default App;
