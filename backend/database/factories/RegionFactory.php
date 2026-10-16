@@ -9,7 +9,7 @@ class RegionFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->randomElement([
+            'name' => fake()->randomElement([
                 'Central Visayas',
                 'Western Visayas',
                 'Eastern Visayas',

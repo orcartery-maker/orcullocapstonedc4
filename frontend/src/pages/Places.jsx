@@ -209,9 +209,9 @@ export default function Places() {
                     <div className="pagination">
 
                         <button
-                            disabled={!pagination.links?.prev}
+                            disabled={pagination.current_page <= 1}
                             onClick={() =>
-                                setPage(page - 1)
+                                setPage((current) => Math.max(1, current - 1))
                             }
                         >
                             Previous
@@ -224,9 +224,9 @@ export default function Places() {
                         </span>
 
                         <button
-                            disabled={!pagination.links?.next}
+                            disabled={pagination.current_page >= pagination.last_page}
                             onClick={() =>
-                                setPage(page + 1)
+                                setPage((current) => Math.min(pagination.last_page, current + 1))
                             }
                         >
                             Next

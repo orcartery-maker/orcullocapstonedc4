@@ -36,7 +36,7 @@ function App() {
                         path="/"
                         element={
                             <Navigate
-                                to="/places"
+                                to="/login"
                                 replace
                             />
                         }

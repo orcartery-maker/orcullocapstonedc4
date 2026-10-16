@@ -14,22 +14,18 @@ use App\Http\Controllers\ExplorationRequestController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Public browsing routes
+Route::get('/places', [PlaceController::class, 'index']);
+Route::get('/places/{place}', [PlaceController::class, 'show']);
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/regions', [RegionController::class, 'index']);
+
 // Routes requiring authentication
 Route::middleware('auth:sanctum')->group(function () {
 
     // Authentication
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
-
-    // Places
-    Route::get('/places', [PlaceController::class, 'index']);
-    Route::get('/places/{place}', [PlaceController::class, 'show']);
-
-    // Categories
-    Route::get('/categories', [CategoryController::class, 'index']);
-
-    // Regions
-    Route::get('/regions', [RegionController::class, 'index']);
 
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index']);
