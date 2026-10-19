@@ -30,11 +30,35 @@ npm install
 npm run dev                 # http://localhost:5173
 ```
 
-The frontend calls the API at `http://127.0.0.1:8000/api` (see `frontend/src/services/api.js`), so start the backend first.
+The frontend reads the API address from `VITE_API_URL` (copy `frontend/.env.example` to `frontend/.env`; the default is `http://127.0.0.1:8000/api`), so start the backend first.
 
-## Notes
+To open the app from a phone, or to publish it online, see [DEPLOY.md](DEPLOY.md).
+
+## Features
+
+**Everyone who is logged in**
+- Browse, search and filter places by category and region; open a place for details and a map link.
+- Save favorites.
+- Read approved reviews and the average rating; write a review (one per place; it is published after an admin approves it).
+- Send an exploration request for a place and track its status under My Requests.
+
+**Administrators**
+- Dashboard with site-wide counts.
+- Add places and activate or deactivate them; manage categories and regions.
+- See every exploration request and change its status.
+- Approve, reject or delete reviews.
+
+## Project layout
+
+| Path | What it is |
+|---|---|
+| `backend/` | Laravel API (controllers, models, migrations, seeders, tests) |
+| `frontend/` | React app (Vite), hash-based routing so it works on static hosting |
+| `render.yaml`, `backend/Dockerfile` | Hosting the API on Render |
+| `.github/workflows/deploy-pages.yml` | Publishes the frontend to GitHub Pages |
+
+## Access rules
 
 - Inactive places are visible to admins only; the public catalog shows active places.
-- `/api/dashboard` and place/category/region management are admin-only.
-- Any logged-in user can favorite places and submit/view their own exploration requests; only admins can change a request's status.
-- Reviews are not implemented yet (the Reviews page is a placeholder).
+- `/api/dashboard`, place/category/region management, review moderation and the full request list are admin-only.
+- Only admins can change a request's status.
