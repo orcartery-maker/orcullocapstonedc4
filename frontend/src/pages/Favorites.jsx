@@ -3,27 +3,47 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import PlaceCard from "../components/PlaceCard";
+import Pagination from "../components/Pagination";
 
 export default function Favorites() {
 
     const [favorites, setFavorites] = useState([]);
 
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        loadFavorites();
-    }, []);
+        loadFavorites(page);
+    }, [page]);
 
-    const loadFavorites = async () => {
+    const loadFavorites = async (pageToLoad) => {
 
         try {
 
-            const response =
-                await api.get("/favorites");
+            setError("");
 
-            setFavorites(
-                response.data.data || []
-            );
+            const response =
+                await api.get("/favorites", {
+                    params: { page: pageToLoad },
+                });
+
+            const items = response.data.data || [];
+
+            // Removing the last item of a page leaves it empty: step back.
+            if (items.length === 0 && pageToLoad > 1) {
+                setPage(pageToLoad - 1);
+                return;
+            }
+
+            setFavorites(items);
+            setLastPage(response.data.last_page || 1);
+
+        } catch (err) {
+
+            setError("Unable to load your favorites.");
 
         } finally {
 
@@ -34,11 +54,19 @@ export default function Favorites() {
 
     const removeFavorite = async (placeId) => {
 
-        await api.delete(
-            `/places/${placeId}/favorite`
-        );
+        try {
 
-        loadFavorites();
+            await api.delete(
+                `/places/${placeId}/favorite`
+            );
+
+            loadFavorites(page);
+
+        } catch (err) {
+
+            setError("Unable to remove this favorite.");
+
+        }
     };
 
     return (
@@ -48,6 +76,10 @@ export default function Favorites() {
             <main className="page">
 
                 <h1>My Favorites</h1>
+
+                {error && (
+                    <div className="error">{error}</div>
+                )}
 
                 {loading && (
                     <p>Loading favorites...</p>
@@ -87,6 +119,12 @@ export default function Favorites() {
                     ))}
 
                 </div>
+
+                <Pagination
+                    page={page}
+                    lastPage={lastPage}
+                    onPageChange={setPage}
+                />
 
             </main>
         </>
