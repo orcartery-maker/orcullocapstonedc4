@@ -75,7 +75,15 @@ class PlaceController extends Controller
         );
 
         return new PlaceResource(
-            $place->load(['region', 'category', 'reviews.user'])
+            $place->load([
+                'region',
+                'category',
+                // Only approved reviews are public.
+                'reviews' => fn ($query) => $query
+                    ->where('status', 'approved')
+                    ->with('user')
+                    ->latest(),
+            ])
         );
     }
 

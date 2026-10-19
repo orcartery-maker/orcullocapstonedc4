@@ -34,6 +34,22 @@ class PlaceResource extends JsonResource
                 'name' => $this->category?->name,
             ],
 
+            'reviews_count' => $this->whenLoaded(
+                'reviews',
+                fn () => $this->reviews->count()
+            ),
+
+            'average_rating' => $this->whenLoaded(
+                'reviews',
+                fn () => $this->reviews->isEmpty()
+                    ? null
+                    : round($this->reviews->avg('rating'), 1)
+            ),
+
+            'reviews' => ReviewResource::collection(
+                $this->whenLoaded('reviews')
+            ),
+
             'created_at' => $this->created_at,
         ];
     }
