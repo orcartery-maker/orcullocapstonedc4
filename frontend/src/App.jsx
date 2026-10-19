@@ -22,6 +22,7 @@ import AdminPlaces from "./pages/AdminPlaces";
 import AdminCategories from "./pages/AdminCategories";
 import AdminRegions from "./pages/AdminRegions";
 import AdminRequests from "./pages/AdminRequests";
+import AdminReviews from "./pages/AdminReviews";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -140,6 +141,15 @@ function App() {
                         element={
                             <AdminRoute>
                                 <AdminRequests />
+                            </AdminRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin/reviews"
+                        element={
+                            <AdminRoute>
+                                <AdminReviews />
                             </AdminRoute>
                         }
                     />

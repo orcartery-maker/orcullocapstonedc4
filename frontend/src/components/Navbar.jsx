@@ -56,6 +56,10 @@ export default function Navbar() {
                         <Link to="/admin/requests">
                             All Requests
                         </Link>
+
+                        <Link to="/admin/reviews">
+                            Moderate Reviews
+                        </Link>
                     </>
                 )}
 
