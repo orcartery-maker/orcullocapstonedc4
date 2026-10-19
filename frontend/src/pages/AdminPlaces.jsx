@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 
 import api from "../services/api";
 import Navbar from "../components/Navbar";
+import Pagination from "../components/Pagination";
 
 export default function AdminPlaces() {
     const [places, setPlaces] = useState([]);
+    const [page, setPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
@@ -14,8 +17,12 @@ export default function AdminPlaces() {
             setLoading(true);
             setError("");
 
-            const response = await api.get("/places");
+            const response = await api.get("/places", {
+                params: { page },
+            });
+
             setPlaces(response.data.data || []);
+            setLastPage(response.data.meta?.last_page || 1);
         } catch (error) {
             setError("Unable to load places.");
         } finally {
@@ -25,7 +32,7 @@ export default function AdminPlaces() {
 
     useEffect(() => {
         loadPlaces();
-    }, []);
+    }, [page]);
 
     const toggleStatus = async (place) => {
         const nextStatus = place.status === "active" ? "inactive" : "active";
@@ -78,6 +85,12 @@ export default function AdminPlaces() {
                         ))}
                     </div>
                 )}
+
+                <Pagination
+                    page={page}
+                    lastPage={lastPage}
+                    onPageChange={setPage}
+                />
             </main>
         </>
     );
