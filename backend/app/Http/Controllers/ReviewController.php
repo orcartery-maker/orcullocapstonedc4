@@ -23,6 +23,40 @@ class ReviewController extends Controller
     }
 
     /**
+     * Admin: every review, newest first. Filter with ?status=pending|approved|rejected.
+     */
+    public function adminIndex(Request $request)
+    {
+        $request->validate([
+            'status' => ['nullable', 'in:pending,approved,rejected'],
+        ]);
+
+        $reviews = Review::with(['user', 'place'])
+            ->when($request->status, fn ($query, $status) => $query->where('status', $status))
+            ->latest()
+            ->paginate(8);
+
+        return ReviewResource::collection($reviews);
+    }
+
+    /**
+     * Admin: approve or reject a review.
+     */
+    public function updateStatus(Request $request, Review $review)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:pending,approved,rejected'],
+        ]);
+
+        $review->update(['status' => $validated['status']]);
+
+        return response()->json([
+            'message' => 'Review status updated.',
+            'data' => new ReviewResource($review->load(['user', 'place'])),
+        ]);
+    }
+
+    /**
      * Submit a review. It stays "pending" until an administrator approves it.
      */
     public function store(Request $request, Place $place)

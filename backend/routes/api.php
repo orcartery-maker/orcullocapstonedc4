@@ -68,6 +68,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/regions/{region}', [RegionController::class, 'update']);
         Route::delete('/regions/{region}', [RegionController::class, 'destroy']);
 
+        // Moderate reviews
+        Route::get('/admin/reviews', [ReviewController::class, 'adminIndex']);
+        Route::patch('/reviews/{review}/status', [ReviewController::class, 'updateStatus']);
+
         // Manage exploration requests
         Route::patch('/exploration-requests/{explorationRequest}/status', [
             ExplorationRequestController::class,
