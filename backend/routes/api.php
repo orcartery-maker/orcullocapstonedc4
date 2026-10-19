@@ -35,6 +35,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/places/{place}/favorite', [FavoriteController::class, 'store']);
     Route::delete('/places/{place}/favorite', [FavoriteController::class, 'destroy']);
 
+    // Exploration requests (any authenticated user)
+    Route::get('/exploration-requests', [ExplorationRequestController::class, 'index']);
+    Route::post('/places/{place}/exploration-request', [ExplorationRequestController::class, 'store']);
+
     // Admin-only routes
     Route::middleware('admin')->group(function () {
 
@@ -58,22 +62,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/regions/{region}', [RegionController::class, 'update']);
         Route::delete('/regions/{region}', [RegionController::class, 'destroy']);
 
-        Route::get('/exploration-requests', [
-    ExplorationRequestController::class,
-    'index'
-]);
-
-Route::post('/places/{place}/exploration-request', [
-    ExplorationRequestController::class,
-    'store'
-]);
-
-Route::patch(
-    '/exploration-requests/{explorationRequest}/status',
-    [
-        ExplorationRequestController::class,
-        'updateStatus'
-    ]
-)->middleware('admin');
+        // Manage exploration requests
+        Route::patch('/exploration-requests/{explorationRequest}/status', [
+            ExplorationRequestController::class,
+            'updateStatus',
+        ]);
     });
 });
