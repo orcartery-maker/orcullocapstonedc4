@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
 
 
 export default function Dashboard() {
@@ -26,14 +27,26 @@ export default function Dashboard() {
     };
 
     if (loading) {
-        return <div className="page">Loading dashboard...</div>;
+        return (
+            <>
+                <Navbar />
+                <div className="page">Loading dashboard...</div>
+            </>
+        );
     }
 
     if (error) {
-        return <div className="page error">{error}</div>;
+        return (
+            <>
+                <Navbar />
+                <div className="page error">{error}</div>
+            </>
+        );
     }
 
     return (
+        <>
+        <Navbar />
         <div className="page">
 
             <div className="page-header">
@@ -80,5 +93,6 @@ export default function Dashboard() {
             </div>
 
         </div>
+        </>
     );
 }

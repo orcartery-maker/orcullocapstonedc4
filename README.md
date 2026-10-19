@@ -1,19 +1,40 @@
-# React + Vite
+# GeoSystem
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A place-exploration app for the Philippines: a Laravel 12 REST API (`backend/`) and a React + Vite frontend (`frontend/`).
 
-Currently, two official plugins are available:
+## Run the backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+cd backend
+composer install
+cp .env.example .env        # then set your DB_* values (MySQL by default; SQLite also works)
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve           # http://127.0.0.1:8000
+```
 
-## React Compiler
+Seeded accounts (password `password`):
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+| Role  | Email                  |
+|-------|------------------------|
+| Admin | admin@geosystem.test   |
+| User  | user@geosystem.test    |
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+Run the tests with `php artisan test`.
 
-## Expanding the Oxlint configuration
+## Run the frontend
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+cd frontend
+npm install
+npm run dev                 # http://localhost:5173
+```
+
+The frontend calls the API at `http://127.0.0.1:8000/api` (see `frontend/src/services/api.js`), so start the backend first.
+
+## Notes
+
+- Inactive places are visible to admins only; the public catalog shows active places.
+- `/api/dashboard` and place/category/region management are admin-only.
+- Any logged-in user can favorite places and submit/view their own exploration requests; only admins can change a request's status.
+- Reviews are not implemented yet (the Reviews page is a placeholder).

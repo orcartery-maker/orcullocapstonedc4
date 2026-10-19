@@ -27,9 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
 
-    // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-
     // Favorites
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/places/{place}/favorite', [FavoriteController::class, 'store']);
@@ -41,6 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin-only routes
     Route::middleware('admin')->group(function () {
+
+        // Dashboard
+        Route::get('/dashboard', [DashboardController::class, 'index']);
 
         // Manage places
         Route::post('/places', [PlaceController::class, 'store']);

@@ -12,7 +12,13 @@ class PlaceController extends Controller
 {
     public function index(Request $request)
     {
+        $isAdmin = $request->user('sanctum')?->isAdmin() ?? false;
+
         $places = Place::with(['region', 'category'])
+            // Only administrators can see inactive places.
+            ->when(! $isAdmin, function ($query) {
+                $query->where('status', 'active');
+            })
             ->when($request->search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -53,8 +59,21 @@ class PlaceController extends Controller
         ], 201);
     }
 
-    public function show(Place $place)
+    public function show(Request $request, Place $place)
     {
+        $user = $request->user('sanctum');
+
+        if ($place->status !== 'active' && ! $user?->isAdmin()) {
+            abort(404);
+        }
+
+        $place->setAttribute(
+            'is_favorite',
+            $user
+                ? $place->favorites()->where('user_id', $user->id)->exists()
+                : false
+        );
+
         return new PlaceResource(
             $place->load(['region', 'category', 'reviews.user'])
         );
@@ -90,9 +109,7 @@ class PlaceController extends Controller
 
         $place->delete();
 
-        return response()->json([
-            'message' => 'Place deleted successfully.',
-        ], 204);
+        return response()->noContent();
     }
 
     public function changeStatus(Request $request, Place $place)

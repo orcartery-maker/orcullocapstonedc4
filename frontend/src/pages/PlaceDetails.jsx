@@ -26,6 +26,7 @@ export default function PlaceDetails() {
         try {
             const response = await api.get(`/places/${id}`);
             setPlace(response.data.data);
+            setIsFavorite(Boolean(response.data.data.is_favorite));
         } catch (error) {
             setError("Unable to load place information.");
         } finally {

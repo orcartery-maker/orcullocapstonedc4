@@ -19,6 +19,11 @@ class PlaceResource extends JsonResource
             'image' => $this->image,
             'status' => $this->status,
 
+            'is_favorite' => $this->when(
+                array_key_exists('is_favorite', $this->resource->getAttributes()),
+                fn () => (bool) $this->resource->getAttribute('is_favorite')
+            ),
+
             'region' => [
                 'id' => $this->region?->id,
                 'name' => $this->region?->name,
