@@ -40,6 +40,11 @@ class ExplorationRequestController extends Controller
 
     public function store(Request $request, Place $place)
     {
+        // Inactive places are hidden from the public catalog.
+        if ($place->status !== 'active') {
+            abort(404);
+        }
+
         $validated = $request->validate([
             'message' => [
                 'nullable',
@@ -47,6 +52,17 @@ class ExplorationRequestController extends Controller
                 'max:1000'
             ],
         ]);
+
+        $alreadyPending = ExplorationRequest::where('user_id', $request->user()->id)
+            ->where('place_id', $place->id)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($alreadyPending) {
+            return response()->json([
+                'message' => 'You already have a pending request for this place.',
+            ], 422);
+        }
 
         $explorationRequest =
             ExplorationRequest::create([
