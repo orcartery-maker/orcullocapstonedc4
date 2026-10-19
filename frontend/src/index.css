@@ -652,3 +652,72 @@ textarea:focus {
   margin-top: 0.5rem;
   font-size: 0.85rem;
 }
+
+/* Reviews */
+.review-section {
+  margin-top: 2rem;
+}
+
+.review-summary {
+  color: var(--muted);
+}
+
+.stars {
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.review-card {
+  padding: 1rem 1.2rem;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.review-card p {
+  margin: 0.4rem 0 0;
+}
+
+.review-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.2rem;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.review-form h3 {
+  margin: 0;
+}
+
+.review-form button {
+  align-self: flex-start;
+  min-height: 46px;
+  padding: 0.8rem 1.1rem;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  font-weight: 700;
+}
+
+.review-form button:disabled {
+  opacity: 0.6;
+}
