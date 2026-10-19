@@ -31,6 +31,10 @@ export default function Navbar() {
                     My Requests
                 </Link>
 
+                <Link to="/reviews">
+                    My Reviews
+                </Link>
+
                 <Link to="/profile">
                     Profile
                 </Link>
