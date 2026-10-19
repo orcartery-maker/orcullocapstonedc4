@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-import api from "../services/api";
+import api, { STORAGE_URL } from "../services/api";
 import Navbar from "../components/Navbar";
 
 export default function PlaceDetails() {
@@ -98,7 +98,7 @@ export default function PlaceDetails() {
                 <article className="place-details">
                     {place.image ? (
                         <img
-                            src={`http://127.0.0.1:8000/storage/${place.image}`}
+                            src={`${STORAGE_URL}/${place.image}`}
                             alt={place.name}
                         />
                     ) : (

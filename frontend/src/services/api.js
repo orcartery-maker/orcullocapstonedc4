@@ -1,7 +1,17 @@
 import axios from "axios";
 
+// The API address comes from VITE_API_URL (see .env.example) so the same
+// build can run locally, on a phone, or on a hosted server.
+export const API_URL =
+    import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
+
+// Where uploaded place images are served from.
+export const STORAGE_URL =
+    import.meta.env.VITE_STORAGE_URL ||
+    `${API_URL.replace(/\/api\/?$/, "")}/storage`;
+
 const api = axios.create({
-    baseURL: "http://127.0.0.1:8000/api",
+    baseURL: API_URL,
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
