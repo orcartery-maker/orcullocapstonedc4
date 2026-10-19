@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/reviews/{review}/status', [ReviewController::class, 'updateStatus']);
 
         // Manage exploration requests
+        Route::get('/admin/exploration-requests', [ExplorationRequestController::class, 'adminIndex']);
         Route::patch('/exploration-requests/{explorationRequest}/status', [
             ExplorationRequestController::class,
             'updateStatus',

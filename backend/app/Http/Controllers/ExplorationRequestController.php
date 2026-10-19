@@ -21,6 +21,23 @@ class ExplorationRequestController extends Controller
         return response()->json($requests);
     }
 
+    /**
+     * Admin: every exploration request. Filter with ?status=...
+     */
+    public function adminIndex(Request $request)
+    {
+        $request->validate([
+            'status' => ['nullable', 'in:pending,approved,completed,rejected'],
+        ]);
+
+        $requests = ExplorationRequest::with(['place', 'user'])
+            ->when($request->status, fn ($query, $status) => $query->where('status', $status))
+            ->latest()
+            ->paginate(8);
+
+        return response()->json($requests);
+    }
+
     public function store(Request $request, Place $place)
     {
         $validated = $request->validate([
