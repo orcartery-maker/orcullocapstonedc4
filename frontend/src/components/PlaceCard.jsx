@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { STORAGE_URL } from "../services/api";
+
 export default function PlaceCard({ place }) {
 
     return (
@@ -7,7 +9,7 @@ export default function PlaceCard({ place }) {
 
             {place.image ? (
                 <img
-                    src={`http://127.0.0.1:8000/storage/${place.image}`}
+                    src={`${STORAGE_URL}/${place.image}`}
                     alt={place.name}
                 />
             ) : (

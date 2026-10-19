@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Region;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class RegionController extends Controller
 {
@@ -23,7 +24,7 @@ class RegionController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('regions', 'name')],
             'description' => ['nullable', 'string'],
         ]);
 
@@ -44,7 +45,12 @@ class RegionController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('regions', 'name')->ignore($region->id),
+            ],
             'description' => ['nullable', 'string'],
         ]);
 

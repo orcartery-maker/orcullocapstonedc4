@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import api from "../services/api";
 import Navbar from "../components/Navbar";
 import PlaceCard from "../components/PlaceCard";
+import Pagination from "../components/Pagination";
 
 export default function Places() {
 
@@ -206,33 +207,11 @@ export default function Places() {
                 </div>
 
                 {pagination && (
-                    <div className="pagination">
-
-                        <button
-                            disabled={pagination.current_page <= 1}
-                            onClick={() =>
-                                setPage((current) => Math.max(1, current - 1))
-                            }
-                        >
-                            Previous
-                        </button>
-
-                        <span>
-                            Page {pagination.current_page}
-                            {" "}of{" "}
-                            {pagination.last_page}
-                        </span>
-
-                        <button
-                            disabled={pagination.current_page >= pagination.last_page}
-                            onClick={() =>
-                                setPage((current) => Math.min(pagination.last_page, current + 1))
-                            }
-                        >
-                            Next
-                        </button>
-
-                    </div>
+                    <Pagination
+                        page={pagination.current_page}
+                        lastPage={pagination.last_page}
+                        onPageChange={setPage}
+                    />
                 )}
 
             </main>

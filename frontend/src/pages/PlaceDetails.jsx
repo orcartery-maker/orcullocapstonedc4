@@ -2,8 +2,10 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
-import api from "../services/api";
+import api, { STORAGE_URL } from "../services/api";
 import Navbar from "../components/Navbar";
+import ReviewSection from "../components/ReviewSection";
+import RequestToExplore from "../components/RequestToExplore";
 
 export default function PlaceDetails() {
     const { id } = useParams();
@@ -26,6 +28,7 @@ export default function PlaceDetails() {
         try {
             const response = await api.get(`/places/${id}`);
             setPlace(response.data.data);
+            setIsFavorite(Boolean(response.data.data.is_favorite));
         } catch (error) {
             setError("Unable to load place information.");
         } finally {
@@ -97,7 +100,7 @@ export default function PlaceDetails() {
                 <article className="place-details">
                     {place.image ? (
                         <img
-                            src={`http://127.0.0.1:8000/storage/${place.image}`}
+                            src={`${STORAGE_URL}/${place.image}`}
                             alt={place.name}
                         />
                     ) : (
@@ -148,6 +151,10 @@ export default function PlaceDetails() {
                         )}
                     </div>
                 </article>
+
+                <RequestToExplore placeId={place.id} />
+
+                <ReviewSection place={place} />
             </main>
         </>
     );

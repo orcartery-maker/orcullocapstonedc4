@@ -12,7 +12,7 @@ class ExplorationRequestFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'place_id' => Place::factory(),
+            'place_id' => Place::inRandomOrder()->value('id') ?? Place::factory(),
             'message' => fake()->sentence(15),
             'status' => fake()->randomElement([
                 'pending',

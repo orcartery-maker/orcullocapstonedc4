@@ -1,5 +1,5 @@
 import {
-    BrowserRouter,
+    HashRouter,
     Navigate,
     Route,
     Routes,
@@ -21,6 +21,8 @@ import ExplorationRequests from "./pages/ExplorationRequests";
 import AdminPlaces from "./pages/AdminPlaces";
 import AdminCategories from "./pages/AdminCategories";
 import AdminRegions from "./pages/AdminRegions";
+import AdminRequests from "./pages/AdminRequests";
+import AdminReviews from "./pages/AdminReviews";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -28,7 +30,8 @@ function App() {
     return (
         <AuthProvider>
 
-            <BrowserRouter>
+            {/* HashRouter keeps deep links working on static hosts like GitHub Pages. */}
+            <HashRouter>
 
                 <Routes>
 
@@ -73,9 +76,9 @@ function App() {
                     <Route
                         path="/dashboard"
                         element={
-                            <ProtectedRoute>
+                            <AdminRoute>
                                 <Dashboard />
-                            </ProtectedRoute>
+                            </AdminRoute>
                         }
                     />
 
@@ -134,6 +137,24 @@ function App() {
                     />
 
                     <Route
+                        path="/admin/requests"
+                        element={
+                            <AdminRoute>
+                                <AdminRequests />
+                            </AdminRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin/reviews"
+                        element={
+                            <AdminRoute>
+                                <AdminReviews />
+                            </AdminRoute>
+                        }
+                    />
+
+                    <Route
                         path="/admin/regions"
                         element={
                             <AdminRoute>
@@ -144,7 +165,7 @@ function App() {
 
                 </Routes>
 
-            </BrowserRouter>
+            </HashRouter>
 
         </AuthProvider>
     );

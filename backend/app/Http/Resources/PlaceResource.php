@@ -19,6 +19,11 @@ class PlaceResource extends JsonResource
             'image' => $this->image,
             'status' => $this->status,
 
+            'is_favorite' => $this->when(
+                array_key_exists('is_favorite', $this->resource->getAttributes()),
+                fn () => (bool) $this->resource->getAttribute('is_favorite')
+            ),
+
             'region' => [
                 'id' => $this->region?->id,
                 'name' => $this->region?->name,
@@ -28,6 +33,22 @@ class PlaceResource extends JsonResource
                 'id' => $this->category?->id,
                 'name' => $this->category?->name,
             ],
+
+            'reviews_count' => $this->whenLoaded(
+                'reviews',
+                fn () => $this->reviews->count()
+            ),
+
+            'average_rating' => $this->whenLoaded(
+                'reviews',
+                fn () => $this->reviews->isEmpty()
+                    ? null
+                    : round($this->reviews->avg('rating'), 1)
+            ),
+
+            'reviews' => ReviewResource::collection(
+                $this->whenLoaded('reviews')
+            ),
 
             'created_at' => $this->created_at,
         ];

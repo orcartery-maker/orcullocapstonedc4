@@ -1,0 +1,43 @@
+# Render Blueprint: hosts the Laravel API and its PostgreSQL database.
+# Render dashboard > New > Blueprint > pick this repository.
+services:
+  - type: web
+    name: geosystem-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: geosystem-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: array
+      - key: CACHE_STORE
+        value: array
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stderr
+      # Loads the demo places/accounts on the first deploy; harmless afterwards.
+      - key: SEED_DEMO_DATA
+        value: "true"
+      # The site that is allowed to call this API (your GitHub Pages address).
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://orcartery-maker.github.io
+
+databases:
+  - name: geosystem-db
+    plan: free
+    databaseName: geosystem
+    user: geosystem

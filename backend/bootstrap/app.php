@@ -13,6 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // The API sits behind a hosting proxy (HTTPS is terminated before PHP).
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
