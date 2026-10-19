@@ -5,6 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import api, { STORAGE_URL } from "../services/api";
 import Navbar from "../components/Navbar";
 import ReviewSection from "../components/ReviewSection";
+import RequestToExplore from "../components/RequestToExplore";
 
 export default function PlaceDetails() {
     const { id } = useParams();
@@ -150,6 +151,8 @@ export default function PlaceDetails() {
                         )}
                     </div>
                 </article>
+
+                <RequestToExplore placeId={place.id} />
 
                 <ReviewSection place={place} />
             </main>

@@ -721,3 +721,24 @@ textarea:focus {
 .review-form button:disabled {
   opacity: 0.6;
 }
+
+/* Request to explore */
+.request-section {
+  margin-top: 1.5rem;
+}
+
+.secondary-button {
+  min-height: 46px;
+  padding: 0.8rem 1.1rem;
+  border: 1px solid var(--primary);
+  border-radius: 14px;
+  background: white;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
