@@ -1,5 +1,5 @@
 import {
-    BrowserRouter,
+    HashRouter,
     Navigate,
     Route,
     Routes,
@@ -28,7 +28,8 @@ function App() {
     return (
         <AuthProvider>
 
-            <BrowserRouter>
+            {/* HashRouter keeps deep links working on static hosts like GitHub Pages. */}
+            <HashRouter>
 
                 <Routes>
 
@@ -144,7 +145,7 @@ function App() {
 
                 </Routes>
 
-            </BrowserRouter>
+            </HashRouter>
 
         </AuthProvider>
     );

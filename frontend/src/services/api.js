@@ -35,7 +35,8 @@ api.interceptors.response.use(
             localStorage.removeItem("token");
             localStorage.removeItem("user");
 
-            window.location.href = "/login";
+            // Routes use the URL hash (HashRouter), so redirect via the hash.
+            window.location.hash = "#/login";
         }
 
         return Promise.reject(error);
