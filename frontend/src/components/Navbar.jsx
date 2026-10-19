@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+
+    // On phones the links sit behind a menu button.
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const handleLogout = async () => {
         await logout();
@@ -13,11 +17,29 @@ export default function Navbar() {
     return (
         <nav className="navbar">
 
-            <Link to="/places" className="logo">
-                🌍 GeoSystem
-            </Link>
+            <div className="nav-top">
 
-            <div className="nav-links">
+                <Link to="/places" className="logo">
+                    🌍 GeoSystem
+                </Link>
+
+                <button
+                    type="button"
+                    className="menu-toggle"
+                    aria-expanded={menuOpen}
+                    aria-controls="nav-links"
+                    onClick={() => setMenuOpen((open) => !open)}
+                >
+                    {menuOpen ? "✕ Close" : "☰ Menu"}
+                </button>
+
+            </div>
+
+            <div
+                id="nav-links"
+                className={`nav-links${menuOpen ? " open" : ""}`}
+                onClick={() => setMenuOpen(false)}
+            >
 
                 <Link to="/places">
                     Explore
