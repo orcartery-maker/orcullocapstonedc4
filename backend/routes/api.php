@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExplorationRequestController;
 
@@ -31,6 +32,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/places/{place}/favorite', [FavoriteController::class, 'store']);
     Route::delete('/places/{place}/favorite', [FavoriteController::class, 'destroy']);
+
+    // Reviews (any authenticated user)
+    Route::get('/reviews', [ReviewController::class, 'index']);
+    Route::post('/places/{place}/reviews', [ReviewController::class, 'store']);
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy']);
 
     // Exploration requests (any authenticated user)
     Route::get('/exploration-requests', [ExplorationRequestController::class, 'index']);
