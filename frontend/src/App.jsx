@@ -21,6 +21,7 @@ import ExplorationRequests from "./pages/ExplorationRequests";
 import AdminPlaces from "./pages/AdminPlaces";
 import AdminCategories from "./pages/AdminCategories";
 import AdminRegions from "./pages/AdminRegions";
+import AdminRequests from "./pages/AdminRequests";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -130,6 +131,15 @@ function App() {
                         element={
                             <AdminRoute>
                                 <AdminCategories />
+                            </AdminRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/admin/requests"
+                        element={
+                            <AdminRoute>
+                                <AdminRequests />
                             </AdminRoute>
                         }
                     />

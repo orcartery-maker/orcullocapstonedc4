@@ -52,6 +52,10 @@ export default function Navbar() {
                         <Link to="/admin/regions">
                             Regions
                         </Link>
+
+                        <Link to="/admin/requests">
+                            All Requests
+                        </Link>
                     </>
                 )}
 
