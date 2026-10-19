@@ -2,13 +2,18 @@
 
 The app has two parts that must both be reachable from the phone: the React
 frontend (`frontend/`) and the Laravel API (`backend/`). `127.0.0.1` on a phone
-means *the phone itself*, so the API address must be configured (it is read from
-`VITE_API_URL`, see `frontend/.env.example`).
+means *the phone itself*, so the API address is configurable through
+`VITE_API_URL` (see `frontend/.env.example`).
 
-> **What has been verified:** the frontend builds and works against the API, the
-> CORS setting works, and the workflow file is valid YAML. **Not verified:** the
-> GitHub Actions run itself and any specific API host, because they need your
-> GitHub / hosting accounts. If a step fails, check the Actions log first.
+> **Checked in development:** the backend test suite passes, the container start
+> script (`backend/docker/start.sh`) runs correctly against a fresh database
+> (migrates, seeds, serves, health check, login), CORS allows only the configured
+> origin, and `render.yaml` and the workflow are valid YAML.
+>
+> **Not checked yet** (they need your accounts or tools that were unavailable
+> when this was written): a frontend build (`npm run build`), the Docker image
+> build, the GitHub Actions run and the Render deploy. If a step fails, read that
+> service's log first and send me the error.
 
 ## Option A: phone on the same Wi-Fi as your computer
 
@@ -30,42 +35,53 @@ means *the phone itself*, so the API address must be configured (it is read from
 
 If it does not load, allow ports 5173 and 8000 through your computer's firewall.
 
-## Option B: a public link (GitHub Pages + a hosted API)
+## Option B: a public link that works from any phone
 
-GitHub Pages only serves static files, so the Laravel API needs a separate host.
+GitHub Pages serves the React site; Render serves the Laravel API and its
+database. Both have free plans (the free web service sleeps when idle, so the
+first request after a pause can take about a minute, and free databases have
+limits; check Render's current terms).
 
-### 1. Host the API (any PHP 8.3 host with MySQL or PostgreSQL)
+### Step 1: put the API on Render
 
-Set these environment variables on the host:
+1. Merge the pull request into `main` first (Render and the Pages workflow both
+   read `main`).
+2. Sign in at https://render.com with your GitHub account.
+3. **New > Blueprint**, choose this repository. Render reads `render.yaml`,
+   creates the `geosystem-api` web service and the `geosystem-db` database, and
+   sets the environment variables for you.
+4. Wait for the first deploy to finish. Open the service and copy its address, for
+   example `https://geosystem-api.onrender.com`.
+5. Check it: open `https://<your-service>.onrender.com/api/places` on your phone.
+   You should see JSON with the demo places.
 
-| Variable | Value |
-|---|---|
-| `APP_ENV` | `production` |
-| `APP_DEBUG` | `false` |
-| `APP_KEY` | output of `php artisan key:generate --show` |
-| `APP_URL` | your API's public `https://` URL |
-| `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | your database |
-| `CORS_ALLOWED_ORIGINS` | `https://orcartery-maker.github.io` |
+The first deploy also loads demo data. Log in with `admin@geosystem.test` or
+`user@geosystem.test`, password `password`. **Change or delete these accounts
+before sharing the link widely.** To stop loading demo data, set
+`SEED_DEMO_DATA` to `false` in the service's Environment tab.
 
-Then, on the host:
-```bash
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-php artisan db:seed --force      # once, to create the demo accounts and places
-```
-Serve the `backend/public` folder. Use a real database: a SQLite file on a host
-with a temporary disk will be wiped on every restart.
+If your GitHub Pages address is not `https://orcartery-maker.github.io`, update
+`CORS_ALLOWED_ORIGINS` in the service's Environment tab to match.
 
-The API must be `https://`, because browsers block a secure Pages site from
-calling a plain `http://` API.
-
-### 2. Publish the frontend to GitHub Pages
+### Step 2: publish the frontend on GitHub Pages
 
 1. Repo **Settings > Pages > Build and deployment > Source: GitHub Actions**.
-2. Repo **Settings > Secrets and variables > Actions > Variables**: add
-   `VITE_API_URL` = `https://your-api-host/api`.
-3. Merge to `main` (or run the workflow manually from the **Actions** tab).
-4. The site appears at `https://orcartery-maker.github.io/orcullocapstonedc4/`.
-   Put that URL in the repo's **About > Website** field.
+2. Repo **Settings > Secrets and variables > Actions > Variables tab > New
+   repository variable**: name `VITE_API_URL`, value
+   `https://<your-service>.onrender.com/api` (note the `/api` at the end).
+3. Open the **Actions** tab, choose **Deploy frontend to GitHub Pages** and
+   press **Run workflow** (it also runs on every push to `main`).
+4. When it turns green, the site is at
+   `https://orcartery-maker.github.io/orcullocapstonedc4/`. Put that address in
+   the repo's **About > Website** field (this replaces the dead link).
 
 Routes use the URL hash (`/#/places`), so refreshing any page works on Pages.
+
+### If something goes wrong
+
+| Symptom | Likely cause |
+|---|---|
+| Pages shows a blank page | The workflow failed; open the Actions run and read the red step. |
+| "Registration failed" / places do not load | `VITE_API_URL` is missing or wrong (rebuild after changing it), or the API is still waking up. |
+| Browser console says "blocked by CORS" | `CORS_ALLOWED_ORIGINS` on Render does not match your Pages address. |
+| API shows a 500 error | Open the Render service **Logs** tab and read the last error. |
